@@ -1,36 +1,25 @@
 const express = require("express");
-const { config } = require("dotenv");
-config();
-const PORT = process.env.PORT || 8080;
+const cors = require("cors");
+require("dotenv").config();
+// const PORT = process.env.PORT;
 // Router
 const userRoutes = require('./routes/user.routes')
-const employeeRoutes = require('./routes/employee.routes')
 
-var app = express();
-// Config Middleware
-app.set("views", __dirname + "/views"); // set express to look in this folder to render our view
-app.set("view engine", "ejs"); // configure template engine
-// Parse application body as JSON
-app.use(express.urlencoded({ extended: true }));
+const { PORT } = process.env;
+
+const app = express();
+
+app.use(cors());
+
 app.use(express.json());
 
-// เรียกใช้งาน indexRouter
-app.get('/', (req, res) => {
-    res.send("Hello World");
-  });
-// app.use("/user", userRouter);
-// app.use("/api", [userApi]);
+app.use(express.urlencoded({ extended: true }));
 
-// using as middleware
-app.use('/api/v1/', [userRoutes,employeeRoutes])
+// db.sequelize.sync({ alter: true }).then(() => {
+//   console.log("All models were synchronized successfully.");
+// });
 
-// ส่วนจัดการ error
-app.get("*", function (req, res, next) {
-  res.status(404);
-  res.render("404.ejs", {
-    title: "Page Not Found",
-  });
-});
+app.use('/api/', [userRoutes])
 
 app.listen(PORT, () =>
   console.log(`Server Running on : http://localhost:${PORT}`)

@@ -1,61 +1,72 @@
-'use strict';
+// const express = require("express");
+// const router = express.Router();
+const Joi = require("joi");
+const validateRequest = require("../_middleware/validate-request");
+// const authorize = require('_middleware/authorize')
+const userService = require("../service/user.service");
 
-const User = require('../models/user.model');
+// routes
+// module.exports = router;
 
-exports.findAll = function(req, res) {
-  User.findAll(function(err, user) {
-    console.log('controller')
-    if (err)
-    res.send(err);
-    console.log('version 1', user);
-    res.send(user);
+// Retrieve all Tutorials from the database.
+
+exports.registerSchema = (req, res, next) => {
+  const schema = Joi.object({
+    firstName: Joi.string().required(),
+    lastName: Joi.string().required(),
+    username: Joi.string().required(),
+    password: Joi.string().min(6).required(),
+    RoleId: Joi.number().integer().required(),
   });
+  validateRequest(req, next, schema);
 };
 
-
-exports.create = function(req, res) {
-    const new_user = new User(req.body);
-
-    //handles null error 
-   if(req.body.constructor === Object && Object.keys(req.body).length === 0){
-        res.status(400).send({ error:true, message: 'Please provide all required field' });
-    }else{
-        User.create(new_user, function(err, user) {
-            if (err)
-            res.send(err);
-            res.json({error:false,message:"User added successfully!",data:user});
-        });
-    }
+exports.register = (req, res, next) => {
+  userService
+    .create(req.body)
+    .then(() => res.json({ message: "Registration successful" }))
+    .catch(next);
 };
 
-
-exports.findById = function(req, res) {
-    User.findById(req.params.id, function(err, user) {
-        if (err)
-        res.send(err);
-        res.json(user);
-    });
+exports.getAll = (req, res, next) => {
+  userService
+    .getAll()
+    .then((users) => res.json(users))
+    .catch(next);
 };
 
-
-exports.update = function(req, res) {
-    if(req.body.constructor === Object && Object.keys(req.body).length === 0){
-        res.status(400).send({ error:true, message: 'Please provide all required field' });
-    }else{
-        User.update(req.params.id, new User(req.body), function(err, user) {
-            if (err)
-            res.send(err);
-            res.json({ error:false, message: 'User successfully updated' });
-        });
-    }
-  
+exports.getCurrent = (req, res, next) => {
+  res.json(req.user);
 };
 
+exports.getById = (req, res, next) => {
+  userService
+    .getById(req.params.id)
+    .then((user) => res.json(user))
+    .catch(next);
+};
 
-exports.delete = function(req, res) {
-  User.delete( req.params.id, function(err, user) {
-    if (err)
-    res.send(err);
-    res.json({ error:false, message: 'User successfully deleted' });
+exports.updateSchema = (req, res, next) => {
+  const schema = Joi.object({
+    firstName: Joi.string().empty(""),
+    lastName: Joi.string().empty(""),
+    username: Joi.string().empty(""),
+    password: Joi.string().min(6).empty(""),
+    RoleId: Joi.number().integer().empty(""),
   });
+  validateRequest(req, next, schema);
+};
+
+exports.update = (req, res, next) => {
+  userService
+    .update(req.params.id, req.body)
+    .then((user) => res.json(user))
+    .catch(next);
+};
+
+exports._delete = (req, res, next) => {
+  userService
+    .delete(req.params.id)
+    .then(() => res.json({ message: "User deleted successfully" }))
+    .catch(next);
 };

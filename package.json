@@ -11,14 +11,16 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "aws-sdk": "^2.879.0",
-    "ejs": "^3.1.6",
-    "express": "^4.17.1",
-    "mysql": "github:mysqljs/mysql"
-  },
   "devDependencies": {
     "dotenv": "^8.2.0",
     "nodemon": "^2.0.7"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "joi": "^17.4.0",
+    "mysql2": "^2.2.5",
+    "sequelize": "^6.6.2"
   }
 }
