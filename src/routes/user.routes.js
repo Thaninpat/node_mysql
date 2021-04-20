@@ -1,20 +1,24 @@
-const express = require('express')
-const router = express.Router()
-const userController = require('../controllers/user.controller');
+const express = require("express");
+const router = express.Router();
+const userController = require("../controllers/user.controller");
+const authorize = require("../_middleware/authorize");
 
-// Retrieve all employees
-router.get('/users', userController.getAll);
+// Authen
+router.post("/authenticate", userController.authenticate);
 
 // Create a new employee
-router.post('/users', userController.register);
+router.post("/register", userController.register);
+
+// Retrieve all employees
+router.get("/users", authorize(), userController.getAll);
 
 // Retrieve a single employee with id
-router.get('/users/:id', userController.getById);
+router.get("/users/:id", authorize(), userController.getById);
 
 // Update a employee with id
-router.put('/users/:id', userController.update);
+router.put("/users/:id", authorize(), userController.update);
 
 // Delete a employee with id
-router.delete('/users/:id', userController._delete);
+router.delete("/users/:id", authorize(), userController._delete);
 
-module.exports = router
+module.exports = router;

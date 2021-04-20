@@ -1,9 +1,10 @@
-// const config = require("config.json");
-// const jwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+
 const db = require("../config/db");
 
 module.exports = {
+  authenticate,
   getAll,
   getById,
   create,
@@ -11,16 +12,21 @@ module.exports = {
   delete: _delete,
 };
 
-// async function authenticate({ username, password }) {
-//   const user = await db.User.scope("withHash").findOne({ where: { username } });
+// const { SECRET_KEY } = process.env;
 
-//   if (!user || !(await bcrypt.compare(password, user.hash)))
-//     throw "Username or password is incorrect";
+async function authenticate({ username, password }) {
+  const user = await db.User.scope("withHash").findOne({ where: { username } });
 
-//   // authentication successful
-//   const token = jwt.sign({ sub: user.id }, config.secret, { expiresIn: "7d" });
-//   return { ...omitHash(user.get()), token };
-// }
+  if (!user || !(await bcrypt.compare(password, user.password)))
+    throw "Username or password is incorrect";
+
+  // authentication successful
+  const token = jwt.sign({ sub: user.id }, process.env.SECRET_KEY, {
+    expiresIn: "7d",
+  });
+  console.log("Sevret", process.env.SECRET_KEY);
+  return { ...omitHash(user.get()), token };
+}
 
 async function create(params) {
   // validate

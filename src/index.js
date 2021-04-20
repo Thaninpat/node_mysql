@@ -1,8 +1,8 @@
+require('rootpath')();
+require("dotenv").config();
+
 const express = require("express");
 const cors = require("cors");
-require("dotenv").config();
-// const PORT = process.env.PORT;
-// Router
 const userRoutes = require('./routes/user.routes')
 
 const { PORT } = process.env;
