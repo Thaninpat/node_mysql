@@ -1,14 +1,21 @@
-// const express = require("express");
-// const router = express.Router();
 const Joi = require("joi");
 const validateRequest = require("../_middleware/validate-request");
-// const authorize = require('_middleware/authorize')
 const userService = require("../service/user.service");
 
-// routes
-// module.exports = router;
+exports.authenticateSchema = (req, res, next) => {
+  const schema = Joi.object({
+    username: Joi.string().required(),
+    password: Joi.string().required(),
+  });
+  validateRequest(req, next, schema);
+};
 
-// Retrieve all Tutorials from the database.
+exports.authenticate = (req, res, next) => {
+  userService
+    .authenticate(req.body)
+    .then((user) => res.json(user))
+    .catch(next);
+};
 
 exports.registerSchema = (req, res, next) => {
   const schema = Joi.object({
