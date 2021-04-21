@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/user.controller");
-const authorize = require("../_middleware/authorize");
+const authorize = require("../middleware/authorize");
 
 // Authen
 router.post("/authenticate", userController.authenticate);

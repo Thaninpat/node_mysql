@@ -10,6 +10,8 @@ module.exports = (sequelize) => {
       password: { type: DataTypes.STRING, allowNull: false },
     },
     {
+      // TODO: Edit time zone (UTC +07:00 ICT	Indochina Time Bangkok) --> createdAt and updatedAt  
+
       // Other model options go here
       defaultScope: {
         // exclude hash by default

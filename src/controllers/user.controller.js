@@ -1,5 +1,5 @@
 const Joi = require("joi");
-const validateRequest = require("../_middleware/validate-request");
+const validateRequest = require("../middleware/validate-request");
 const userService = require("../service/user.service");
 
 exports.authenticateSchema = (req, res, next) => {
